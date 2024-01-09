@@ -1,17 +1,24 @@
 import React from 'react'
 import { useContext } from 'react'
 import { AuthContext } from '../context/context'
+import Sidebar from './components/sidebar/Sidebar'
+import Information from './components/information/Information'
+import './index.css'
+import Main from './components/main/Main'
 
-const Dashboard = () => {
+const Dashboard = ({children}) => {
 
   const {getAllUsers} = useContext(AuthContext)
   return (
-    <>
-    <div>
-        dashboard
+    <div className='dashboard-wrapper'>
+      <Sidebar />
+      <div className="main-info">
+        <Information />
+        <div className="main">
+          {children}
+        </div>
+      </div>
     </div>
-    <button onClick={getAllUsers}> users </button>
-    </>
     
   )
 }

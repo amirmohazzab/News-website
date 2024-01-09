@@ -1,0 +1,12 @@
+.dashboard-wrapper {
+    display: flex
+}
+
+.main-info {
+    width: calc(100% - 200px);
+}
+
+.main {
+    padding: 30px 120px;
+    width: 100%;
+}

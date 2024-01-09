@@ -96,8 +96,34 @@ export const AuthContextProvider = ({children}) => {
     }
 
 
+    const createNews = async(data) => {
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("desc", data.desc);
+        formData.append("catId", data.catId);
+        formData.append("userId", userId);
+        formData.append("file", data.file);
+        try {
+            const res = await axiosJWT.post("http://localhost:5000/api/news", formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            toast.success(res.data.msg, {
+                position: "bottom-center",
+                autoClose: 3000,
+                closeOnClick: true,
+                pauseOnHover: true
+            });
+            navigate('/view-news')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     return (
-        <AuthContext.Provider value={{login, error, getAllUsers}}>
+        <AuthContext.Provider value={{login, error, getAllUsers, axiosJWT, token, createNews}}>
             {children}
         </AuthContext.Provider>
     )

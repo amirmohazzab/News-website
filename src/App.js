@@ -1,7 +1,9 @@
 import Login from "./admin/auth/Login";
 import {Routes, Route} from 'react-router-dom'
-import Dashboard from "./admin/dashboard/Dashboard";
 import { ToastContainer } from 'react-toastify';
+import ViewNews from "./admin/dashboard/components/news/ViewNews";
+import Main from "./admin/dashboard/components/main/Main";
+import AddNews from "./admin/dashboard/components/news/AddNews";
 
 
 function App() {
@@ -10,7 +12,9 @@ function App() {
       <>
         <Routes>
           <Route path='/administrator' element={<Login />} />
-          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/dashboard' element={<Main />} />
+          <Route path='/view-news' element={<ViewNews />} />
+          <Route path='/add-news' element={<AddNews />} />
         </Routes>
         <ToastContainer />
       </>
