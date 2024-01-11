@@ -1,9 +1,13 @@
-import React, {useContext, useEffect, useState} from 'react'
-import Dashboard from './../../Dashboard';
+import React, {useState, useEffect, useContext} from 'react'
+import Dashboard from '../../Dashboard'
+import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import {useFormik} from 'formik'
-import { AuthContext } from '../../../context/context';
+import {useLocation, useParams} from 'react-router-dom'
+import { AuthContext } from '../../../context/context'
 import {baseUrl} from '../../../../utils/baseUrl'
+
+
+
 
 const formSchema = Yup.object({
     title: Yup.string().required("News title is required"),
@@ -11,24 +15,27 @@ const formSchema = Yup.object({
     catId: Yup.string().required("Choosing category is required")
 })
 
-const AddNews = () => {
+const EditNews = () => {
 
-    const {axiosJWT, token, createNews} = useContext(AuthContext);
+    const {axiosJWT, token, singleNews, updateNews} = useContext(AuthContext);
     const [categoryList, setCategoryList] = useState([]);
     const [file, setFile] = useState([]);
     const [preview, setPreview] = useState("");
 
+    const {id} = useParams();
+    const {state} = useLocation()
     
-
     const loadImage = (e) => {
         const image = e.target.files[0];
         setFile(image);
         setPreview(URL.createObjectURL(image))
     }
-    
+
+
 
     useEffect(()=>{
-        getCategory()
+        getCategory();
+        singleNews(id);
     }, [])
 
     const getCategory = async()=>{
@@ -45,12 +52,11 @@ const AddNews = () => {
         }
     };
 
-
     const formik = useFormik({
         initialValues: {
-            title: "",
-            desc: "",
-            catId: "",
+            title: state.title,
+            desc: state.desc,
+            catId: state.catId,  
             file: ""
         },
         onSubmit: (values) => {
@@ -58,9 +64,10 @@ const AddNews = () => {
                 title: values.title,
                 desc: values.desc,
                 catId: values.catId,
-                file: file
+                file: file, 
+                id: id
             }
-            createNews(data)
+            updateNews(data)
         },
         validationSchema: formSchema
     });
@@ -75,7 +82,7 @@ const AddNews = () => {
                         type="text" 
                         className="input" 
                         placeholder='example * this is title'
-                        value={formik.values.title}
+                        defaultValue={state.title}
                         onChange={formik.handleChange('title')}
                         onBlur={formik.handleBlur('title')}
                     />
@@ -90,7 +97,7 @@ const AddNews = () => {
                     <textarea 
                         className="textarea" 
                         placeholder='example * this is content'
-                        value={formik.values.desc}
+                        defaultValue={state.desc}
                         onChange={formik.handleChange('desc')}
                         onBlur={formik.handleBlur('desc')}
                     ></textarea>
@@ -104,7 +111,7 @@ const AddNews = () => {
                 <div className="control">
                     <div className="select is-fullwidth">
                         <select
-                            value={formik.values.catId}
+                            defaultValue={state.catId}
                             onChange={formik.handleChange('catId')}
                             onBlur={formik.handleBlur('catId')}
                         >
@@ -154,4 +161,4 @@ const AddNews = () => {
   )
 }
 
-export default AddNews
+export default EditNews

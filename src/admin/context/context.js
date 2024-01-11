@@ -1,8 +1,9 @@
 import { createContext, useState, useEffect } from "react";
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
-import {toast} from 'react-toastify'
 import {jwtDecode} from 'jwt-decode'
+import {successMessage} from '../../utils/message'
+import {baseUrl} from '../../utils/baseUrl';
 
 
 export const AuthContext = createContext();
@@ -15,8 +16,11 @@ export const AuthContextProvider = ({children}) => {
     const [admin, setAdmin] = useState(null);
     const [token, setToken] = useState("");
     const [expire, setExpire] = useState("");
+    const [news, setNews] = useState([]);
+    const [singlePost, setSinglePost] = useState();
 
     const navigate = useNavigate();
+    
 
     useEffect(()=> {
         refreshToken();
@@ -61,17 +65,12 @@ export const AuthContextProvider = ({children}) => {
 
     const login = async (inputs) => {
         try {
-            const res = await axios.post('http://localhost:5000/api/users/login', inputs);
+            const res = await axios.post(`${baseUrl}/users/login`, inputs);
             if (res.data.error){
                 setError(res.data.error)
             } else {
                 navigate("/dashboard")
-                toast.success(res.data.msg, {
-                    position: "bottom-center",
-                    autoClose: 3000,
-                    closeOnClick: true,
-                    pauseOnHover: true
-                });
+                successMessage(res.data.msg)
                 setName(res.data.name);
                 setUserId(res.data.userId);
                 setToken(res.data.accessToken);
@@ -84,7 +83,7 @@ export const AuthContextProvider = ({children}) => {
 
     const getAllUsers = async () => {
         try {
-            const res = await axiosJWT.get('http://localhost:5000/api/users', {
+            const res = await axiosJWT.get(`${baseUrl}/users`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -104,17 +103,12 @@ export const AuthContextProvider = ({children}) => {
         formData.append("userId", userId);
         formData.append("file", data.file);
         try {
-            const res = await axiosJWT.post("http://localhost:5000/api/news", formData, {
+            const res = await axiosJWT.post(`${baseUrl}/news`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            toast.success(res.data.msg, {
-                position: "bottom-center",
-                autoClose: 3000,
-                closeOnClick: true,
-                pauseOnHover: true
-            });
+            successMessage(res.data.msg)
             navigate('/view-news')
         } catch (error) {
             console.log(error)
@@ -122,8 +116,74 @@ export const AuthContextProvider = ({children}) => {
     }
 
 
+    const handleNews = async () => {
+        try {
+          const res = await axiosJWT.get(`${baseUrl}/news`, {
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+        })
+        setNews(res.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    const deleteNews = async (id) => {
+        try {
+            const res = await axiosJWT.delete(`${baseUrl}/news/${id}`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            successMessage(res.data.msg)
+            handleNews();
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    const singleNews = async (id) => {
+        try {
+            const res = await axiosJWT.get(`${baseUrl}/news/${id}`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            setSinglePost(res.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    const updateNews = async (data) => {
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("desc", data.desc);
+        formData.append("catId", data.catId);
+        formData.append("userId", userId);
+        formData.append("file", data.file);
+
+        try {
+            const res = await axiosJWT.put(`${baseUrl}/news/${data.id}`, formData, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            successMessage(res.data.msg)
+            navigate('/view-news')
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+
     return (
-        <AuthContext.Provider value={{login, error, getAllUsers, axiosJWT, token, createNews}}>
+        <AuthContext.Provider value={{login, error, getAllUsers, axiosJWT, token, createNews, handleNews, news, deleteNews, singleNews, singlePost, updateNews}}>
             {children}
         </AuthContext.Provider>
     )
