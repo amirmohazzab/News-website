@@ -3,17 +3,20 @@ import Dashboard from '../../Dashboard'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../../context/context'
 import './ViewNews.css'
+import Pagination from '../../Pagination'
+import { paginate } from './../../../../utils/paginate';
 
 const ViewNews = () => {
 
-  const {handleNews, news, deleteNews} = useContext(AuthContext);
+  const {handleNews, news, deleteNews, currentPage, perPage, handlePageChange} = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
-  const [id, setId] = useState("");
 
+  const [id, setId] = useState("");
   const handleId = (id) => {
     setId(id);
   }
   
+  let newsData = paginate(news, currentPage, perPage);
 
   useEffect(()=> {
     handleNews()
@@ -23,7 +26,7 @@ const ViewNews = () => {
   return (
     <Dashboard>
         <div className='is-flex is-justify-content-end' >
-          <Link to='/add-news' className='button px-6 is-success mb-6'>
+          <Link to='/add-news' className='button px-6 is-success mb-4'>
             Add news
           </Link>
         </div>
@@ -42,13 +45,13 @@ const ViewNews = () => {
 
           <tbody>
             {
-              news ?
-              news.map((item, index)=>(
+              newsData ?
+              newsData.map((item, index)=>(
                 <tr key={item.id}>
                   <td> {index+1} </td>
-                  <td> {item.title} </td>
+                  <td width="200"> {item.title} </td>
                   <td> 
-                    <img src={item.url} width="100" alt="" />
+                    <img src={item.url} width="70" alt="" />
                   </td>
                   <td> {item?.user?.name} </td>
                   <td> 
@@ -78,6 +81,13 @@ const ViewNews = () => {
           </div>
         : ""
         }
+
+        <Pagination 
+          totalCourse={news.length}
+          currentPage={currentPage}
+          perPage={perPage}
+          onPageChange={handlePageChange}
+        />
     </Dashboard>
    
   )

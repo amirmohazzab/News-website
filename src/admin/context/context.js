@@ -18,6 +18,16 @@ export const AuthContextProvider = ({children}) => {
     const [expire, setExpire] = useState("");
     const [news, setNews] = useState([]);
     const [singlePost, setSinglePost] = useState();
+    const [category, setCategory] = useState([]);
+    const [errorVideo, setErrorVideo] = useState();
+    const [allVideo, setAllVideo] = useState([])
+
+
+    const [perPage] = useState(3);
+    const [currentPage, setCurrentPage] = useState(1);
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
     const navigate = useNavigate();
     
@@ -178,12 +188,177 @@ export const AuthContextProvider = ({children}) => {
         } catch (error) {
             console.log(error)
         }
-
     }
 
 
+    const createCategory = async(value) => {
+        try {
+            const res = await axiosJWT.post(`${baseUrl}/create-category`, value, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            successMessage(res.data.msg);
+            navigate('/view-category');
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    const getCategory = async(value) => {
+        try {
+            const res = await axiosJWT.get(`${baseUrl}/get-category`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            setCategory(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const updateCategory = async (values) => {
+        try {
+            const res = await axiosJWT.put(`${baseUrl}/update-category/${values.id}`, values, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            successMessage(res.data.msg);
+            navigate('/view-category')
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const deleteCategory = async(id) => {
+        try {
+            const res = await axiosJWT.delete(`${baseUrl}/delete-category/${id}`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            successMessage(res.data.msg);
+            getCategory();
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const createVideo = async (data) => {
+
+       const formData = new FormData();
+       formData.append("file", data.file);
+
+       try {
+            const res = await axiosJWT.post(`${baseUrl}/create-video`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            if (res.data.error) {
+                setErrorVideo(res.data.error)
+            }
+            if (res.data.msg) {
+                successMessage(res.data.msg);
+                navigate('/view-video')
+            }
+       } catch (error) {
+            console.log(error)
+       }
+    };
+
+
+    const getAllVideo = async() => {
+        try {
+            const res = await axiosJWT.get(`${baseUrl}/get-video`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            setAllVideo(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const editVideo = async (data) => {
+
+        const formData = new FormData();
+        formData.append("file", data.file);
+
+        try {
+            const res = await axiosJWT.put(`${baseUrl}/edit-video/${data.id}}`, formData, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            if (res.data.error) {
+                setErrorVideo(res.data.error)
+            }
+            if (res.data.msg) {
+                successMessage(res.data.msg);
+                navigate('/view-video')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    const deleteVideo = async (id) => {
+        try {
+            const res = await axiosJWT.delete(`${baseUrl}/delete-video/${id}}`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            successMessage(res.data.msg)
+            getAllVideo()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+
     return (
-        <AuthContext.Provider value={{login, error, getAllUsers, axiosJWT, token, createNews, handleNews, news, deleteNews, singleNews, singlePost, updateNews}}>
+        <AuthContext.Provider 
+            value={{
+                login, 
+                error, 
+                getAllUsers, 
+                axiosJWT, 
+                token, 
+                createNews, 
+                handleNews, 
+                news, 
+                deleteNews, 
+                singleNews, 
+                singlePost, 
+                updateNews,
+                createCategory,
+                getCategory,
+                category,
+                updateCategory,
+                deleteCategory,
+                createVideo,
+                errorVideo,
+                setErrorVideo,
+                getAllVideo,
+                allVideo,
+                deleteVideo,
+                editVideo,
+                currentPage,
+                perPage,
+                handlePageChange,
+            }}>
             {children}
         </AuthContext.Provider>
     )

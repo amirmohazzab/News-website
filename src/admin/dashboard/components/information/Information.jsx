@@ -7,14 +7,14 @@ import {BsFillCapslockFill, BsFillPersonPlusFill, BsChatDots} from 'react-icons/
 const Information = () => {
   return (
     <div className='information'>
-        <div className='view-web is-flex is-align-items-center is-justify-content-space-between mb-5'>
+        <div className='view-web is-flex is-align-items-center is-justify-content-space-between mb-3'>
             <div className='view-webpage'>
                 <a href='/' className='button has-background-success has-text-white'> visit website </a>
             </div>
             <div className="view-profile">
                 <span> 
                     <Link to="/">
-                        <img src={profile} alt="" className='image profile-photo'/>
+                        <img src={profile} alt="" className='image profile-photo' width="50"/>
                     </Link>
                 </span>
             </div>
