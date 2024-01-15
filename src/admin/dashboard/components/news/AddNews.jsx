@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import {useFormik} from 'formik'
 import { AuthContext } from '../../../context/context';
 import {baseUrl} from '../../../../utils/baseUrl'
+import { Link } from 'react-router-dom';
 
 const formSchema = Yup.object({
     title: Yup.string().required("News title is required"),
@@ -13,7 +14,7 @@ const formSchema = Yup.object({
 
 const AddNews = () => {
 
-    const {axiosJWT, token, createNews} = useContext(AuthContext);
+    const {axiosJWT, token, createNews, errorCreateNews, setErrorCreateNews} = useContext(AuthContext);
     const [categoryList, setCategoryList] = useState([]);
     const [file, setFile] = useState([]);
     const [preview, setPreview] = useState("");
@@ -29,6 +30,13 @@ const AddNews = () => {
 
     useEffect(()=>{
         getCategory()
+    }, [])
+
+    useEffect(()=> {
+        
+        return ()=> {
+            setErrorCreateNews()
+        }
     }, [])
 
     const getCategory = async()=>{
@@ -67,6 +75,16 @@ const AddNews = () => {
 
   return (
     <Dashboard>
+        <div className='is-flex is-justify-content-end' >
+          <Link to='/view-news' className='button px-6 is-success mb-4'>
+              Show News
+          </Link>
+        </div>
+        <div className='is-flex' >
+          <p className='help has-text-danger is-size-6 mb-4'>
+            {errorCreateNews}
+          </p>
+        </div>
         <form onSubmit={formik.handleSubmit}>
             <div className="field">
                 <label className="label"> News Title </label>

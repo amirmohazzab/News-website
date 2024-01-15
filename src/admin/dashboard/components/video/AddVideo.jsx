@@ -3,6 +3,7 @@ import Dashboard from '../../Dashboard'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
 import { AuthContext } from '../../../context/context'
+import { Link } from 'react-router-dom'
 
 
 const formSchema = Yup.object({
@@ -35,6 +36,16 @@ const AddVideo = () => {
 
   return (
     <Dashboard>
+        <div className='is-flex is-justify-content-end' >
+          <Link to='/view-video' className='button px-6 is-success mb-4'>
+              Show Videos
+          </Link>
+        </div>
+        <div className='is-flex' >
+            <p className='help has-text-danger is-size-6 mb-4'>
+                {errorVideo}
+            </p>
+        </div>
         <form onSubmit={formik.handleSubmit}>
             <div className="control">
             <label className='label'> Choose video </label>
@@ -43,9 +54,6 @@ const AddVideo = () => {
                     className="input" 
                     onChange={e => setFile(e.target.files[0])}
                 />
-                <p className='help has-text-danger'>
-                   {errorVideo}
-                </p>
             </div>
             <button type='submit' className="button is-success is-size-6 px-6 my-5">
                 Add Video

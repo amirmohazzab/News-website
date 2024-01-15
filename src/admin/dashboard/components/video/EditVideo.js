@@ -13,7 +13,7 @@ const formSchema = Yup.object({
 
 const EditVideo = () => {
 
-    const {editVideo, getAllVideo, errorVideo, setErrorVideo} = useContext(AuthContext)
+    const {editVideo, getAllVideo, errorVideo, setErrorVideo, } = useContext(AuthContext)
     const [file, setFile] = useState({});
 
     const {id} = useParams();
@@ -46,8 +46,13 @@ const EditVideo = () => {
         <Dashboard>
             <div className='is-flex is-justify-content-end' >
                 <Link to='/view-video' className='button px-6 is-success mb-6'>
-                    Show Video
+                    Show Videos
                 </Link>
+            </div>
+            <div className='is-flex' >
+                <p className='help has-text-danger is-size-6 mb-4'>
+                    {errorVideo}
+                </p>
             </div>
             <form onSubmit={formik.handleSubmit}>
                 <div className='field'>
@@ -58,9 +63,6 @@ const EditVideo = () => {
                             className='input' 
                             onChange={loadVideo}
                         />
-                        <p className='help has-text-danger'>
-                            {errorVideo}
-                        </p>
                     </div>
                 </div>
                 <div className='field'>

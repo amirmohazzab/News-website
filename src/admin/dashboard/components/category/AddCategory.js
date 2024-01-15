@@ -3,6 +3,7 @@ import Dashboard from '../../Dashboard'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
 import { AuthContext } from '../../../context/context'
+import { Link } from 'react-router-dom'
 
 const formSchema = Yup.object({
     name: Yup.string().required("Category name is required")
@@ -27,6 +28,11 @@ const AddCategory = () => {
 
   return (
     <Dashboard>
+        <div className='is-flex is-justify-content-end' >
+          <Link to='/view-category' className='button px-6 is-success mb-4'>
+              Show Categories
+          </Link>
+        </div>
         <form onSubmit={formik.handleSubmit}>
             <div className='field'>
                 <label className='label'> Category Name </label>

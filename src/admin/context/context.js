@@ -19,8 +19,13 @@ export const AuthContextProvider = ({children}) => {
     const [news, setNews] = useState([]);
     const [singlePost, setSinglePost] = useState();
     const [category, setCategory] = useState([]);
-    const [errorVideo, setErrorVideo] = useState();
-    const [allVideo, setAllVideo] = useState([])
+    const [errorVideo, setErrorVideo] = useState("");
+    const [allVideo, setAllVideo] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [errorRegister, setErrorRegister] = useState("");
+    const [errorUpdateUser, setErrorUpdateUser] = useState("");
+    const [errorUpdateNews, setErrorUpdateNews] = useState("");
+    const [errorCreateNews, setErrorCreateNews] = useState("");
 
 
     const [perPage] = useState(3);
@@ -65,13 +70,31 @@ export const AuthContextProvider = ({children}) => {
                 setUserId(decoded.userId);
                 setAdmin(decoded.isAdmin);
                 setExpire(decoded.exp);
-                console.log(response);
             }
             return config
         }, (error) => {
             return Promise.reject(error)
         }
     )
+
+
+    const register = async(inputs) => {
+        try {
+            const res = await axiosJWT.post(`${baseUrl}/users/register`, inputs, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            if(res.data.error){
+                setErrorRegister(res.data.error)
+            }else{
+                successMessage(res.data.msg)
+                navigate('/view-user')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const login = async (inputs) => {
         try {
@@ -98,7 +121,7 @@ export const AuthContextProvider = ({children}) => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            console.log(res)
+            setUsers(res.data)
         } catch (error) {
             console.log(error)
         }
@@ -118,8 +141,13 @@ export const AuthContextProvider = ({children}) => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            successMessage(res.data.msg)
-            navigate('/view-news')
+            if (res.data.error) {
+                setErrorCreateNews(res.data.error)
+            }
+            if (res.data.msg) {
+                successMessage(res.data.msg);
+                navigate('/view-news')
+            }
         } catch (error) {
             console.log(error)
         }
@@ -183,8 +211,13 @@ export const AuthContextProvider = ({children}) => {
                     authorization: `Bearer ${token}`
                 }
             })
-            successMessage(res.data.msg)
-            navigate('/view-news')
+            if (res.data.error) {
+                setErrorUpdateNews(res.data.error)
+            }
+            if (res.data.msg) {
+                successMessage(res.data.msg);
+                navigate('/view-news')
+            }
         } catch (error) {
             console.log(error)
         }
@@ -324,6 +357,60 @@ export const AuthContextProvider = ({children}) => {
         } catch (error) {
             console.log(error)
         }
+    };
+
+
+    const updateUser = async(value) => {
+        try {
+            const res = await axiosJWT.put(`${baseUrl}/users/${value.id}`, value, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            if(res.data.error){
+                setErrorUpdateUser(res.data.error)
+            }else{
+                successMessage(res.data.msg)
+                navigate('/view-user')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const deleteUser = async(id) => {
+        try {
+            const res = await axiosJWT.delete(`${baseUrl}/users/${id}`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            successMessage(res.data.msg)
+            getAllUsers();
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const logout = async() => {
+        try {
+            const res = await axiosJWT.delete(`${baseUrl}/users/logout`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            if(res.data.error){
+                console.log(res.data.error)
+            }else{
+                successMessage(res.data.msg)
+                navigate('/administrator')
+            }
+            console.log(res.data.msg)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 
@@ -358,6 +445,20 @@ export const AuthContextProvider = ({children}) => {
                 currentPage,
                 perPage,
                 handlePageChange,
+                register,
+                errorRegister,
+                setErrorRegister,
+                users,
+                updateUser,
+                errorUpdateUser,
+                setErrorUpdateUser,
+                deleteUser,
+                errorCreateNews,
+                setErrorCreateNews,
+                errorUpdateNews, 
+                setErrorUpdateNews,
+                logout
+
             }}>
             {children}
         </AuthContext.Provider>

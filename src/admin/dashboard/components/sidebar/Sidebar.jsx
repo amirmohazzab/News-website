@@ -1,7 +1,8 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import './Sidebar.css'
 import logo from '../../../../assets/images/logo.webp'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../../context/context'
 
 
 const Sidebar = () => {
@@ -9,6 +10,9 @@ const Sidebar = () => {
   const [showNews, setShowNews] = useState(false);
   const [showCats, setShowCats] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [showUsers, setShowUsers] = useState(false);
+
+  const {logout} = useContext(AuthContext)
 
 
 
@@ -49,10 +53,18 @@ const Sidebar = () => {
            </ul>
            }
         </li>
-
-        <li><Link to='/users'> Users </Link></li>
+        <li>
+        <span onClick={()=> setShowUsers(!showUsers)} style={{display: 'block'}}> Users </span>
+           {
+            showUsers && 
+            <ul> 
+              <li> <Link to='/add-user' style={{display: 'block'}}> Add User </Link> </li>
+              <li> <Link to='/view-user' style={{display: 'block'}}> Show Users </Link> </li>
+           </ul>
+           }
+        </li>
         <li><Link to='/dashboard'> Comments </Link></li>
-        <li><Link to='/exit'> Exit </Link></li>
+        <li><span style={{display: 'block'}} onClick={logout}> Exit </span></li>
       </ul>
     </div>
   )

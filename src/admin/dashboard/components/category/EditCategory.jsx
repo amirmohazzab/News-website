@@ -34,7 +34,7 @@ const EditCategory = () => {
         <Dashboard>
             <div className='is-flex is-justify-content-end' >
                 <Link to='/view-category' className='button px-6 is-success mb-6'>
-                    Show Category
+                    Show Categories
                 </Link>
             </div>
             <form onSubmit={formik.handleSubmit}>

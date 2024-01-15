@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react'
 import Dashboard from '../../Dashboard'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import {useLocation, useParams} from 'react-router-dom'
+import {Link, useLocation, useParams} from 'react-router-dom'
 import { AuthContext } from '../../../context/context'
 import {baseUrl} from '../../../../utils/baseUrl'
 
@@ -17,7 +17,7 @@ const formSchema = Yup.object({
 
 const EditNews = () => {
 
-    const {axiosJWT, token, singleNews, updateNews} = useContext(AuthContext);
+    const {axiosJWT, token, singleNews, updateNews, errorUpdateNews, setErrorUpdateNews} = useContext(AuthContext);
     const [categoryList, setCategoryList] = useState([]);
     const [file, setFile] = useState([]);
     const [preview, setPreview] = useState("");
@@ -36,6 +36,14 @@ const EditNews = () => {
     useEffect(()=>{
         getCategory();
         singleNews(id);
+    }, [])
+
+
+    useEffect(()=> {
+        
+        return ()=> {
+            setErrorUpdateNews()
+        }
     }, [])
 
     const getCategory = async()=>{
@@ -74,6 +82,16 @@ const EditNews = () => {
 
   return (
     <Dashboard>
+        <div className='is-flex is-justify-content-end' >
+          <Link to='/view-news' className='button px-6 is-success mb-4'>
+              Show News
+          </Link>
+        </div>
+        <div className='is-flex' >
+          <p className='help has-text-danger is-size-6 mb-4'>
+            {errorUpdateNews}
+          </p>
+        </div>
         <form onSubmit={formik.handleSubmit}>
             <div className="field">
                 <label className="label"> News Title </label>
@@ -153,7 +171,7 @@ const EditNews = () => {
 
             <div className="field mt-6">
                 <div className="control">
-                    <button type='submit' className="button is-success px-6"> Save </button>
+                    <button type='submit' className="button is-success px-6"> Edit news </button>
                 </div>
             </div>
         </form>
