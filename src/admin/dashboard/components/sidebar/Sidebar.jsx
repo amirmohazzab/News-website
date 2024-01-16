@@ -63,7 +63,7 @@ const Sidebar = () => {
            </ul>
            }
         </li>
-        <li><Link to='/dashboard'> Comments </Link></li>
+        <li><Link to='/comment' style={{display: 'block'}}> Comments </Link></li>
         <li><span style={{display: 'block'}} onClick={logout}> Exit </span></li>
       </ul>
     </div>

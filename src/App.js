@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import Login from "./admin/auth/Login";
 import {Routes, Route} from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
@@ -14,16 +15,22 @@ import EditVideo from "./admin/dashboard/components/video/EditVideo";
 import ViewUsers from "./admin/dashboard/components/users/ViewUsers";
 import AddUser from "./admin/dashboard/components/users/AddUser";
 import EditUser from "./admin/dashboard/components/users/EditUser";
+import ViewComment from "./admin/dashboard/components/comment/ViewComment";
+import { AuthContext } from "./admin/context/context";
+import ProfileUpdate from "./admin/dashboard/components/users/ProfileUpdate";
 
 
 function App() {
+
+  const {userId} = useContext(AuthContext);
+
   return (
     <div>
       <>
         <Routes>
           <Route path='/administrator' element={<Login />} />
-          <Route path='/dashboard' element={<Main />} />
 
+          <Route path='/dashboard' element={<Main />} />
           <Route path='/view-news' element={<ViewNews />} />
           <Route path='/add-news' element={<AddNews />} />
           <Route path='/edit-news/:id' element={<EditNews />} />
@@ -39,6 +46,9 @@ function App() {
           <Route path='/view-user' element={<ViewUsers />} />
           <Route path='/add-user' element={<AddUser />} /> 
           <Route path='/edit-user/:id' element={<EditUser />} />
+          <Route path='/edit-profile/:id' element={<ProfileUpdate />} />
+
+          <Route path='/comment' element={<ViewComment />} />
           
         </Routes>
         <ToastContainer />

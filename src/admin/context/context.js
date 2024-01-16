@@ -26,6 +26,10 @@ export const AuthContextProvider = ({children}) => {
     const [errorUpdateUser, setErrorUpdateUser] = useState("");
     const [errorUpdateNews, setErrorUpdateNews] = useState("");
     const [errorCreateNews, setErrorCreateNews] = useState("");
+    const [comments, setComments] = useState([]);
+    const [profilePhoto, setProfilePhoto] = useState("");
+    const [profileName, setProfileName] = useState();
+    const [errorUpdateProfile, setErrorUpdateProfile] = useState("");
 
 
     const [perPage] = useState(3);
@@ -39,7 +43,14 @@ export const AuthContextProvider = ({children}) => {
 
     useEffect(()=> {
         refreshToken();
+        profile();
     }, []);
+
+    useEffect(()=> {
+        getAllUsers();
+        getAllComments();
+        handleNews();
+    }, [])
 
     const refreshToken = async () => {
         try {
@@ -108,6 +119,7 @@ export const AuthContextProvider = ({children}) => {
                 setUserId(res.data.userId);
                 setToken(res.data.accessToken);
                 setAdmin(res.data.isAdmin);
+                profile();
             }
         } catch (error) {
             console.log(error)
@@ -407,11 +419,119 @@ export const AuthContextProvider = ({children}) => {
                 successMessage(res.data.msg)
                 navigate('/administrator')
             }
-            console.log(res.data.msg)
         } catch (error) {
             console.log(error)
         }
-    }
+    };
+
+
+    const getAllComments = async() => {
+        try {
+            const res = await axiosJWT.get(`${baseUrl}/comment`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            setComments(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const deleteComment = async(id) => {
+        try {
+            const res = await axiosJWT.delete(`${baseUrl}/comment/${id}`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            successMessage(res.data.msg)
+            getAllComments()
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const activeComment = async(id) => {
+        const data = {
+            isActive: true
+        }
+        try {
+            const res = await axiosJWT.put(`${baseUrl}/comment/active/${id}`, data, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            getAllComments()
+            successMessage(res.data.msg)
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const inactiveComment = async(id) => {
+        const data = {
+            isActive: false
+        }
+        try {
+            const res = await axiosJWT.put(`${baseUrl}/comment/unactive/${id}`, data, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            getAllComments()
+            successMessage(res.data.msg)
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const updateProfile = async (data) => {
+        try {
+            const formData = new FormData();
+            formData.append("name", data.name);
+            formData.append("password", data.password);
+            formData.append("confPassword", data.confPassword);
+            formData.append("file", data.file);
+            formData.append("id", data.id);
+
+            const res = await axiosJWT.put(`${baseUrl}/users/profile/${data.id}`, formData, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            if(res.data.error){
+                setErrorUpdateProfile(res.data.error)
+            }else{
+                successMessage(res.data.msg)
+                navigate('/dashboard')
+            }
+            //console.log(res.data.error)
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    const profile = async() => {
+        try {
+            const res = await axiosJWT.get(`${baseUrl}/users/profile`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            setProfilePhoto(res.data.url);
+            setProfileName(res.data.name);
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
 
 
 
@@ -457,7 +577,19 @@ export const AuthContextProvider = ({children}) => {
                 setErrorCreateNews,
                 errorUpdateNews, 
                 setErrorUpdateNews,
-                logout
+                logout,
+                getAllComments,
+                comments,
+                deleteComment,
+                activeComment,
+                inactiveComment,
+                userId,
+                updateProfile,
+                profile,
+                profilePhoto,
+                profileName,
+                setErrorUpdateProfile,
+                errorUpdateProfile
 
             }}>
             {children}
