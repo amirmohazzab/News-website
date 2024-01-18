@@ -18,6 +18,10 @@ import EditUser from "./admin/dashboard/components/users/EditUser";
 import ViewComment from "./admin/dashboard/components/comment/ViewComment";
 import { AuthContext } from "./admin/context/context";
 import ProfileUpdate from "./admin/dashboard/components/users/ProfileUpdate";
+import HomeScreen from "./pages/HomeScreen";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Detail from "./pages/Detail";
 
 
 function App() {
@@ -28,6 +32,11 @@ function App() {
     <div>
       <>
         <Routes>
+
+          <Route path='/' element={<HomeScreen />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/detail/:id' element={<Detail />} />
           <Route path='/administrator' element={<Login />} />
 
           <Route path='/dashboard' element={<Main />} />

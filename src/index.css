@@ -13,7 +13,28 @@ code {
 }
 
 
+
 * {
   text-decoration: none !important;
+}
+
+body {
+  background: whitesmoke;
+}
+
+a {
+  color: rgb(36, 36, 36)
+}
+
+
+
+.container {
+  padding: 0 50px;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 0 8px;
+  }
 }
 
