@@ -589,7 +589,8 @@ export const AuthContextProvider = ({children}) => {
                 profilePhoto,
                 profileName,
                 setErrorUpdateProfile,
-                errorUpdateProfile
+                errorUpdateProfile,
+                admin
 
             }}>
             {children}

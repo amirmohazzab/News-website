@@ -3,9 +3,13 @@ import TopMenu from './../components/Home/TopMenu/TopMenu';
 import Navbar from './../components/Home/Navbar/Navbar';
 import Content from '../components/Detail/Content/Content';
 import RightSide from '../components/Detail/RightSide/RightSide';
+import { useLocation } from 'react-router-dom';
 
 
 const Detail = () => {
+
+  const {state} = useLocation();
+
   return (
     <>
       <TopMenu />
@@ -14,7 +18,7 @@ const Detail = () => {
         <div className="container">
             <div className="columns">
                 <div className="column is-two-thirds">
-                    <Content />
+                    <Content data={state} />
                 </div>
                 <div className="column is-one-third">
                     <RightSide />

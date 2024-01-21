@@ -32,7 +32,7 @@ const ViewVideo = () => {
             </Link>
         </div>
         <table className="table is-fullwidth">
-            <thead>
+            <thead className="is-fullwidth">
                 <tr>
                     <th> No </th>
                     <th> Video </th>
@@ -41,13 +41,13 @@ const ViewVideo = () => {
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody >
                 {
                     allVideoData && allVideoData.map((video, index) => (
                         <tr key={video.id}>
                             <td> {index+1} </td>
                             <td> 
-                                <video src={video.url} width='70' height="60" controls> </video>
+                                <video src={video.url} width='70px' controls> </video>
                             </td>
                             <td>
                                 <Link state={video} to={`/edit-video/${video.id}`} className="button is-info"> Edit </Link>

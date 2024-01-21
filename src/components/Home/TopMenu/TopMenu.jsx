@@ -1,6 +1,6 @@
 import React from 'react'
 import {BsFillTelephoneFill, BsReception4} from 'react-icons/bs'
-import logo from '../../../assets/images/logo.webp';
+import logo from '../../../assets/images/logo.jpg';
 import ads from '../../../assets/images/ads.jpg';
 import './topmenu.css'
 

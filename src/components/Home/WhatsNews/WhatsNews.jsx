@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import sendNews from "../../../assets/images/sendnews.jpg";
 import img from "../../../assets/images/1.jpeg"
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import "./whatsnews.css"
+import { HomeContext } from "../../../context/context";
+import Loader from "../../Loading/Loader";
 const WhatsNews = () => {
+
+  const {category, loadingCatNews, news, LoadCatNews} = useContext(HomeContext);
+  const cat = useLocation().search;
+
+  useEffect(()=> {
+    LoadCatNews()
+  },[cat])
+
   return (
     <div id="whats-news" className="py-5">
       <div className="container">
@@ -19,12 +29,13 @@ const WhatsNews = () => {
                     <li className="ml-5 has-text-weight-bold">
                       <NavLink to="/"> All </NavLink>
                     </li>
-                    <li className="ml-5 has-text-weight-bold">
-                      <NavLink to="/"> Political </NavLink>
-                    </li>
-                    <li className="ml-5 has-text-weight-bold">
-                      <NavLink to="/"> Social </NavLink>
-                    </li>
+                    {
+                      category?.map((cat) => (
+                        <li className="ml-5 has-text-weight-bold" key={cat.id}>
+                          <NavLink to={`/?cat=${cat.id}`}> {cat.name} </NavLink>
+                        </li>
+                      ))
+                    }
                   </ul>
                 </div>
 
@@ -33,60 +44,35 @@ const WhatsNews = () => {
                 </div>
               </div>
 
-              <div className="whats-news-post mt-6">
-                <div className="whats-news-post-item">
-                  <div className="whats-news-post-item-img">
-                    <Link to="/">
-                      <img src={img} alt="" />
-                    </Link>
+              {
+                loadingCatNews ? (
+                  <div className="has-text-centered">
+                    <Loader />
                   </div>
-                  <div className="whats-news-post-item-description">
-                    <Link to="/">
-                    <p> lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum</p>   
-                    </Link>
-                    <div className="whats-news-post-item-date">
-                      <p>
-                        16/16/90
-                      </p>
+                ) : (
+                  <div className="whats-news-post mt-6">
+                    {
+                      news?.map((n) => (
+                        <div className="whats-news-post-item" key={n.id}>
+                          <div className="whats-news-post-item-img">
+                            <Link state={n} to={`/detail/${n.id}`}>
+                              <img src={n.url} alt="" />
+                            </Link>
+                          </div>
+                          <div className="whats-news-post-item-description">
+                            <Link state={n} to={`/detail/${n.id}`}>
+                              <p> {n.desc} </p>   
+                            </Link>
+                            <div className="whats-news-post-item-date">
+                              <p>{n.createdAt}</p>
+                            </div>
+                          </div>
                     </div>
+                      ))
+                    }
                   </div>
-                </div>
-                <div className="whats-news-post-item">
-                  <div className="whats-news-post-item-img">
-                    <Link to="/">
-                      <img src={img} alt="" />
-                    </Link>
-                  </div>
-                  <div className="whats-news-post-item-description">
-                    <Link to="/">
-                      <p> lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep  </p>
-                    </Link>
-                    <div className="whats-news-post-item-date">
-                      <p>
-                        16/16/90
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="whats-news-post-item">
-                  <div className="whats-news-post-item-img">
-                    <Link to="/">
-                      <img src={img} alt="" />
-                    </Link>
-                  </div>
-                  <div className="whats-news-post-item-description">
-                    <Link to="/">
-                    <p> lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep ipsum lorep </p>  
-                    </Link>
-                    <div className="whats-news-post-item-date">
-                      <p>
-                        16/16/90
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+                )
+              }
             </div>
           </div>
         </div>

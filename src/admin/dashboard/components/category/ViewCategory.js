@@ -32,32 +32,39 @@ const ViewCategory = () => {
       </Link>
     </div>
 
+    
     <table className='table is-fullwidth'>
-      <thead className='is-fullwidth'>
-        <tr>
-          <th> No </th>
-          <th> Name </th>
-          <th> Edit </th>
-          <th> Delete </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        { categoryData ? categoryData.map((cat, index) => (
-            <tr key={cat.id}>
-              <td> {index+1} </td>
-              <td width="300"> {cat.name} </td>
-              <td> <Link state={cat} to={`/edit-category/${cat.id}`} className="button is-info"> Edit </Link> </td>
-              <td>
-                <button onClick={() => {setShowModal(true); handleId(cat.id)}} className='button is-danger'>
-                  Delete
-                </button>
-              </td>              
+          <thead >
+            <tr>
+              <th> No </th>
+              <th> Name </th>
+              <th> Edit </th>
+              <th> Delete </th>
             </tr>
-          )) : null
-        }
-      </tbody>
-    </table>
+          </thead>
+
+          <tbody>
+            {
+              categoryData ?
+              categoryData.map((item, index)=>(
+                <tr key={item.id}>
+                  <td className='aval'> {index+1} </td>
+                  <td> {item.name} </td>
+                  <td> 
+                    <Link state={item} to={`/edit-category/${item.id}`} className='button is-info'> Edit </Link>
+                  </td>
+                  <td> 
+                    <button onClick={() => {setShowModal(true); handleId(item.id)}} className='button is-danger'>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              )) : null
+            }
+          </tbody>
+        </table>
+    
+   
 
       {
           showModal ?

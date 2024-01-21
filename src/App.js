@@ -22,6 +22,8 @@ import HomeScreen from "./pages/HomeScreen";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Detail from "./pages/Detail";
+import NotFound from "./components/NotFound/NotFound";
+import Admin from "./admin/authCheck/Admin";
 
 
 function App() {
@@ -39,25 +41,36 @@ function App() {
           <Route path='/detail/:id' element={<Detail />} />
           <Route path='/administrator' element={<Login />} />
 
-          <Route path='/dashboard' element={<Main />} />
-          <Route path='/view-news' element={<ViewNews />} />
-          <Route path='/add-news' element={<AddNews />} />
-          <Route path='/edit-news/:id' element={<EditNews />} />
+         
+          {userId && (
+          <>
+                <Route path='/dashboard' element={<Main />} />
 
-          <Route path='/view-category' element={<ViewCategory />} />
-          <Route path='/add-category' element={<AddCategory />} />
-          <Route path='/edit-category/:id' element={<EditCategory />} />
+                <Route path='/view-news' element={<ViewNews />} />
+                <Route path='/add-news' element={<AddNews />} />
+                <Route path='/edit-news/:id' element={<EditNews />} />
 
-          <Route path='/view-video' element={<ViewVideo />} />
-          <Route path='/add-video' element={<AddVideo />} /> 
-          <Route path='/edit-video/:id' element={<EditVideo />} />
+              
+              <Route element={<Admin />}>
+                <Route path='/view-category' element={<ViewCategory />} />
+                <Route path='/add-category' element={<AddCategory />} />
+                <Route path='/edit-category/:id' element={<EditCategory />} />
 
-          <Route path='/view-user' element={<ViewUsers />} />
-          <Route path='/add-user' element={<AddUser />} /> 
-          <Route path='/edit-user/:id' element={<EditUser />} />
-          <Route path='/edit-profile/:id' element={<ProfileUpdate />} />
+                <Route path='/view-video' element={<ViewVideo />} />
+                <Route path='/add-video' element={<AddVideo />} /> 
+                <Route path='/edit-video/:id' element={<EditVideo />} />
 
-          <Route path='/comment' element={<ViewComment />} />
+                <Route path='/view-user' element={<ViewUsers />} />
+                <Route path='/add-user' element={<AddUser />} /> 
+                <Route path='/edit-user/:id' element={<EditUser />} />
+              </Route>
+             
+
+                <Route path='/edit-profile/:id' element={<ProfileUpdate />} />
+                <Route path='/comment' element={<ViewComment />} />
+                </>
+        )}
+                <Route path='*' element={<NotFound />} />
           
         </Routes>
         <ToastContainer />

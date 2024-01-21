@@ -49,8 +49,8 @@ const ViewUsers = () => {
               usersData?.map((user, index)=>(
                 <tr key={user.id}>
                   <td> {index+1} </td>
-                  <td width="100"> {user.name} </td>
-                  <td width="200"> {user.email} </td>
+                  <td> {user.name} </td>
+                  <td> {user.email} </td>
                   <td> {user.isAdmin ? "Admin" : "Author"} </td>
                   <td>
                     <Link state={user} to={`/edit-user/${user.id}`} className='button is-info'>

@@ -32,7 +32,7 @@ const ViewNews = () => {
         </div>
 
         <table className='table is-fullwidth'>
-          <thead className='is-fullwidth'>
+          <thead >
             <tr>
               <th> No </th>
               <th> Title </th>
@@ -48,8 +48,8 @@ const ViewNews = () => {
               newsData ?
               newsData.map((item, index)=>(
                 <tr key={item.id}>
-                  <td> {index+1} </td>
-                  <td width="200"> {item.title} </td>
+                  <td className='aval'> {index+1} </td>
+                  <td> {item.title} </td>
                   <td> 
                     <img src={item.url} width="70" alt="" />
                   </td>
